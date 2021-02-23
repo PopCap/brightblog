@@ -21,4 +21,33 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Post {}>'.format(self.body)
+        return '<Post {}: {}>'.format(self.title, self.body)
+
+class Comment(db.Model):
+    _N = 6 # number of digits used for each component of path
+
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(140))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # if I want to link to the post as if I were browsing all of a user's comments
+    post_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
+    path = db.Column(db.Text, index=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
+    replies = db.relationship(
+        'Comment', backref=db.backref('parent', remote_side=[id]),
+        lazy='dynamic')
+        
+    def save(self):
+        db.session.add(self)
+        # first save comment without path to get assigned an id
+        db.session.commit()
+        prefix = self.parent.path + '.' if self.parent else ''
+        # if (self.parent) self.post_id = self.parent.post_id
+        self.path = prefix + '{:0{}d}'.format(self.id, self._N)
+        # save again after being able to build path
+        db.session.commit()
+    
+    # used to get indentation level for nested comments
+    def level(self):
+        return len(self.path) # self._N - 1
