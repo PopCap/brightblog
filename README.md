@@ -1,3 +1,3 @@
 ﻿# brightblog
- I don't even know what to put in here yet. To build the virtual environment to run the
- flask application pip install on the requirements.txt.
+ - To build the virtual environment to run the flask application use pip install on the requirements.txt.
+ - This flask project build is heavily inspired by Miguel Grinberg's Flesk Mega-Tutorial at blog.miguelgrinberg.com
