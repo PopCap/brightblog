@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
-from app.models import User
-from flask_login import current_user, login_user, logout_user
+from app.forms import LoginForm, RegistrationForm, PostForm
+from app.models import User, Post
+from flask_login import current_user, login_user, logout_user, login_required
 
 @app.route('/')
 @app.route('/index')
@@ -28,7 +28,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
-            return redirect_url(url_for('login'))
+            return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
@@ -51,3 +51,16 @@ def register():
         flash('Welcome to Brightblog ' + form.username.data + '!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/post', methods=['GET', 'POST'])
+@login_required
+def post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('index'))
+    return render_template('post.html', title='Make a Post', form=form)
