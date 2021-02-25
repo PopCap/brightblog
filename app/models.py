@@ -40,7 +40,7 @@ class Comment(db.Model):
     _N = 6 # number of digits used for each component of path
 
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(140))
+    text = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     timestamp = db.Column(db.DateTime(), default=datetime.utcnow, index=True)

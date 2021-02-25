@@ -14,7 +14,7 @@
             {% for error in form.title.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-            {{ form.post(cols=50, rows = 70)}}
+            {{ form.post(cols=100, rows = 35)}}
             {% for error in form.post.errors %}
             <p style="color: red;">[{{ error }}]</p>
             {% endfor %}

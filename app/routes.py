@@ -7,13 +7,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 @app.route('/')
 @app.route('/index')
 def index():
-    posts = [
-        {
-            'author': {'username': 'Bob'},
-            'title': 'Test',
-            'body': 'Teeeeeeeeeeeeeeest'
-        }
-    ]
+    posts = Post.query.all()
     return render_template('index.html', title='Home Page', posts=posts)
 
 # methods override the default for login form
@@ -64,3 +58,9 @@ def post():
         flash('Your post is now live!')
         return redirect(url_for('index'))
     return render_template('post.html', title='Make a Post', form=form)
+
+@app.route('/post/<int:post_id>')
+def show_post(post_id):
+    form = CommentForm()
+    post = Post.query.get(post_id)
+    return render_template('showpost.html', title='Reading Post', post=post)
