@@ -4,4 +4,41 @@
     <h1>{{ post.title }}</h1>
     <h2>{{ post.author }}</h2>
     <div><p>{{ post.body }}</p></div>
+    <h2>Conversation</h2>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.comment.label }}<br>
+            {{ form.comment(col=100, rows=5)}}
+            {% for error in form.comment.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% if comments is not none %}
+        {% for comment in comments %}
+            <div>
+                <p>{{ comment.text }}</p>
+                <p>
+                    <small><small>
+                        <b>by {{ comment.author }}</b> {{ comment.timestamp }}
+                    </small></small> 
+                </p>
+                {% if current_user.is_authenticated %}
+                    <form id='reply'  action="" method="post">
+                        {{ form.hidden_tag() }}
+                        <p>
+                            {{ form.comment.label }}<br>
+                            {{ form.comment(col=100, rows=5)}}
+                            {% for error in form.comment.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </p>
+                        <p>{{ form.submit() }}</p>
+                    </form>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -63,3 +64,6 @@ class Comment(db.Model):
     # used to get indentation level for nested comments
     def level(self):
         return len(self.path) # self._N - 1
+
+    def __repr__(self):
+        return '<Comment[ Author: {} Time: {} Post: {}: {}]>'.format(self.author, self.timestamp, self.post_id, self.text)

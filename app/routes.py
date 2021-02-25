@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, PostForm
-from app.models import User, Post
+from app.forms import LoginForm, RegistrationForm, PostForm, CommentForm
+from app.models import User, Post, Comment
 from flask_login import current_user, login_user, logout_user, login_required
 
 @app.route('/')
@@ -59,8 +59,18 @@ def post():
         return redirect(url_for('index'))
     return render_template('post.html', title='Make a Post', form=form)
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
     form = CommentForm()
     post = Post.query.get(post_id)
-    return render_template('showpost.html', title='Reading Post', post=post)
+    comments = Comment.query.filter_by(post_id=post_id).all()
+    if post is not None:
+        if form.validate_on_submit():
+            comment = Comment(text=form.comment.data, author=current_user, post_id=post_id)
+            db.session.add(comment)
+            db.session.commit()
+            flash('Your comment has been posted!')
+            return redirect(url_for('show_post', post_id=post.id))
+        return render_template('showpost.html', title='Reading Post', form=form, post=post, comments=comments)
+    else:
+        return render_template('404.html', title='Page not found.')

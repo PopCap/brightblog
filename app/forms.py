@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 from app.models import User
+from flask_login import current_user
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -34,7 +35,10 @@ class PostForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class CommentForm(FlaskForm):
-    comment = TextAreaField=('What do you think?', validators=[DataRequired(), Length(min=1, max=150)])
+    comment = TextAreaField('What do you think?', validators=[DataRequired(), Length(min=1, max=500)])
     submit = SubmitField('Reply')
 
-    def validate_logged_in(user)
+    def validate_logged_in():
+        # prevent users who are not logged in from commenting
+        if current_user.is_anonymous:
+            raise ValidationError('Please Login in to post a comment.')
