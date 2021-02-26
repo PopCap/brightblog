@@ -31,7 +31,7 @@ class RegistrationForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('Post Title', validators=[DataRequired(), Length(min=1, max=150)])
-    post = TextAreaField('Post Content', validators=[DataRequired(), Length(min=1, max=3500)])
+    post = TextAreaField('Post Content', render_kw={'class': 'form-control', 'rows': 5}, validators=[DataRequired(), Length(min=1, max=3500)], id="post_body")
     submit = SubmitField('Submit')
 
 class CommentForm(FlaskForm):

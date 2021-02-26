@@ -23,7 +23,7 @@
                 <p>{{ comment.text }}</p>
                 {% if current_user.is_authenticated %}
                 {% set toggleCall = "{}{}{}".format('toggleDisplay(', comment.id, ')') %}
-                <div id={{comment.id}} >
+                <div class="comment_form "id={{comment.id}} >
                     <div class="row" display="none">
                         <div class="col-md-4">
                             {{ wtf.quick_form(form) }}

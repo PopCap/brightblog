@@ -1,9 +1,24 @@
-.container {
-    margin-left: 120px;
-    margin-right: 120px;
+img {
+    height: auto;
 }
 
 #test {
     display: block;
     height: auto;
+}
+
+#post_body {
+    width: 70vw;
+}
+
+p {
+    color: black;
+}
+
+.red{
+    color: rgb(238, 1, 32);
+}
+
+.comment_form {
+    display: none;
 }
