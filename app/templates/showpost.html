@@ -1,44 +1,53 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
+{% block app_content %}
+<div class="container">
     <h1>{{ post.title }}</h1>
-    <h2>{{ post.author }}</h2>
-    <div><p>{{ post.body }}</p></div>
-    <h2>Conversation</h2>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.comment.label }}<br>
-            {{ form.comment(col=100, rows=5)}}
-            {% for error in form.comment.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+    <h3>posted by <b>{{ post.author.username }}</b></h3>
+    <p>{{post.body}}</p>
+    <h2>Comments</h2>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
     {% if comments is not none %}
         {% for comment in comments %}
             <div>
-                <p>{{ comment.text }}</p>
                 <p>
-                    <small><small>
-                        <b>by {{ comment.author }}</b> {{ comment.timestamp }}
-                    </small></small> 
+                    <small>
+                        <b>{{ comment.author.username }}<br></b> {{ comment.timestamp.strftime("%d/%m/%Y") }}
+                    </small> 
                 </p>
+                <p>{{ comment.text }}</p>
                 {% if current_user.is_authenticated %}
-                    <form id='reply'  action="" method="post">
-                        {{ form.hidden_tag() }}
-                        <p>
-                            {{ form.comment.label }}<br>
-                            {{ form.comment(col=100, rows=5)}}
-                            {% for error in form.comment.errors %}
-                            <span style="color: red;">[{{ error }}]</span>
-                            {% endfor %}
-                        </p>
-                        <p>{{ form.submit() }}</p>
-                    </form>
+                {% set toggleCall = "{}{}{}".format('toggleDisplay(', comment.id, ')') %}
+                <div id={{comment.id}} >
+                    <div class="row" display="none">
+                        <div class="col-md-4">
+                            {{ wtf.quick_form(form) }}
+                        </div>
+                    </div>
+                </div>
+                <button onclick={{toggleCall}}>Reply</button>
                 {% endif %}
             </div>
         {% endfor %}
     {% endif %}
+</div>
+    <script>
+        function toggleDisplay(id)
+        {
+            commentBox = document.getElementById(id);
+            if (commentBox.style.display == 'none')
+            {
+                commentBox.style.display = 'block'
+            }
+            else
+            {
+                commentBox.style.display = 'none'
+            }   
+        }
+    </script>
 {% endblock %}

@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
+<div class="container">
+    {% if current_user.is_anonymous %}
+        <h1 class="welcome">Welcome to Brightblog!</h1>
+    {% else %}
+        <h1 class="welcome">Hey there {{ current_user.username }}!</h1>
+    {% endif %}
+    <h3>Take a look at these posts:</h3>
     {% for post in posts %}
     <div>
         <p>
@@ -10,4 +16,5 @@
         </p>
     </div>
     {% endfor %}
+</div>
 {% endblock %}

@@ -35,8 +35,8 @@ class PostForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class CommentForm(FlaskForm):
-    comment = TextAreaField('What do you think?', validators=[DataRequired(), Length(min=1, max=500)])
-    submit = SubmitField('Reply')
+    comment = TextAreaField('', render_kw={'placeholder': 'Your thoughts?'}, validators=[DataRequired(), Length(min=1, max=500)])
+    submit = SubmitField('Submit Comment')
 
     def validate_logged_in():
         # prevent users who are not logged in from commenting
